@@ -1,6 +1,20 @@
 #root {
   max-width: 1280px;
+  height: 100vh;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+input {
+  padding: 0.5rem;
+  margin: 1rem;
+  width: 600px;
+  font-size: 1.5rem;
+  border: 1px solid black;
+  border-radius: 5px;
 }

@@ -1,26 +1,24 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import { generate } from "random-words";
-import GuessSlots from "./components/Grid";
+import WordsGrid from "./components/WordsGrid";
 
 function App() {
   const [wordsOnGrid, setWordsOnGrid] = useState([
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
+    { id: 1, wordInRow: ["h", "e", "l", "l", "o"] },
+    { id: 2, wordInRow: ["j", "e", "l", "l", "o"] },
+    { id: 3, wordInRow: ["", "", "", "", ""] },
+    { id: 4, wordInRow: ["", "", "", "", ""] },
+    { id: 5, wordInRow: ["", "", "", "", ""] },
+    { id: 6, wordInRow: ["", "", "", "", ""] },
   ]);
-  const [targetWord, setTargetWord] = useState("");
+  const [targetWord, setTargetWord] = useState(
+    generate({ minLength: 5, maxLength: 5 })
+  );
   const [newWordEntered, setNewWordEntered] = useState("");
   const [numbetOfGuesses, setNumberOfGuesses] = useState(0);
-
-  useEffect(() => {
-    //get ramom word from libary
-    const randomWord = generate({ minLength: 5, maxLength: 5 });
-    console.log(randomWord);
-    setTargetWord(randomWord);
-  }, []);
+  const MAX_GUESSES = 6;
+  console.log(targetWord);
 
   function handleUserEnterWord(event) {
     const newWord = event.target.value;
@@ -37,22 +35,23 @@ function App() {
       setNewWordEntered("");
       return;
     }
-    if (numbetOfGuesses >= 6) {
+
+    if (numbetOfGuesses >= MAX_GUESSES) {
       alert("You have reached the maximum number of guesses");
       //reset game
       return;
     }
 
     //change this to update words on grid instead of adding to array
-    setWordsOnGrid((prev) => [...prev, newWordEntered]);
+    // setWordsOnGrid((prev) => [...prev, newWordEntered]);
     setNewWordEntered("");
   }
 
   return (
     <>
-      <h1>Wordle Game</h1>
+      <h1>Wordle</h1>
       <main>
-        <GuessSlots words={wordsOnGrid} />
+        <WordsGrid wordsOnGrid={wordsOnGrid} newWordEntered={newWordEntered} />
       </main>
       <form onSubmit={handleUserSubmitWord}>
         <input
