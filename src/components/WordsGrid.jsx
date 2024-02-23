@@ -1,8 +1,7 @@
 import classes from "./WordsGrid.module.css";
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line react/prop-types
-export default function WordsGrid({ wordsOnGrid, newWordEntered }) {
-  console.log(wordsOnGrid, newWordEntered);
+export default function WordsGrid({ wordsOnGrid, targetWord }) {
   return (
     <main className={classes.container}>
       {wordsOnGrid.map((word) => (

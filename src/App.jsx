@@ -4,59 +4,83 @@ import { generate } from "random-words";
 import WordsGrid from "./components/WordsGrid";
 
 function App() {
-  const [wordsOnGrid, setWordsOnGrid] = useState([
-    { id: 1, wordInRow: ["h", "e", "l", "l", "o"] },
-    { id: 2, wordInRow: ["j", "e", "l", "l", "o"] },
+  const WordsOnGridDefault = [
+    { id: 0, wordInRow: ["", "", "", "", ""] },
+    { id: 1, wordInRow: ["", "", "", "", ""] },
+    { id: 2, wordInRow: ["", "", "", "", ""] },
     { id: 3, wordInRow: ["", "", "", "", ""] },
     { id: 4, wordInRow: ["", "", "", "", ""] },
     { id: 5, wordInRow: ["", "", "", "", ""] },
-    { id: 6, wordInRow: ["", "", "", "", ""] },
-  ]);
+  ];
+  const [wordsOnGrid, setWordsOnGrid] = useState(WordsOnGridDefault);
   const [targetWord, setTargetWord] = useState(
     generate({ minLength: 5, maxLength: 5 })
   );
   const [newWordEntered, setNewWordEntered] = useState("");
-  const [numbetOfGuesses, setNumberOfGuesses] = useState(0);
+  const [numberOfGuesses, setNumberOfGuesses] = useState(0);
   const MAX_GUESSES = 6;
   console.log(targetWord);
+  const [wrongLengthOfWord, setWrongLengthOfWord] = useState(false);
 
   function handleUserEnterWord(event) {
+    setWrongLengthOfWord(false);
     const newWord = event.target.value;
     setNewWordEntered(newWord);
   }
 
   function handleUserSubmitWord(event) {
     event.preventDefault();
-    setNumberOfGuesses(numbetOfGuesses + 1);
-    //validate word length
-    if (newWordEntered.length !== 5) {
-      //display a message to the user change this to display message near input or in input
-      alert("Word must be 5 characters long");
-      setNewWordEntered("");
-      return;
-    }
+    setNumberOfGuesses(numberOfGuesses + 1);
+    //Validate word length
 
-    if (numbetOfGuesses >= MAX_GUESSES) {
+    if (numberOfGuesses >= MAX_GUESSES) {
       alert("You have reached the maximum number of guesses");
-      //reset game
+      //Reset game
+      setNumberOfGuesses(0);
+      setWordsOnGrid(WordsOnGridDefault);
+      setTargetWord(generate({ minLength: 5, maxLength: 5 }));
+      setNewWordEntered("");
+      setWrongLengthOfWord(false);
+      return;
+    }
+    if (newWordEntered.length !== 5) {
+      setWrongLengthOfWord(true);
+      setNewWordEntered("");
+      setNumberOfGuesses(numberOfGuesses);
       return;
     }
 
-    //change this to update words on grid instead of adding to array
-    // setWordsOnGrid((prev) => [...prev, newWordEntered]);
+    const updateWordsOnGrid = wordsOnGrid.map((word) => {
+      console.log(newWordEntered);
+      if (word.id === numberOfGuesses) {
+        return {
+          id: numberOfGuesses,
+          wordInRow: newWordEntered.split(""),
+        };
+      }
+      return word;
+    });
+
+    setWordsOnGrid(updateWordsOnGrid);
+
     setNewWordEntered("");
   }
+  console.log(wordsOnGrid);
 
   return (
     <>
-      <h1>Wordle</h1>
+      <h1>WORDLE</h1>
       <main>
-        <WordsGrid wordsOnGrid={wordsOnGrid} newWordEntered={newWordEntered} />
+        <WordsGrid wordsOnGrid={wordsOnGrid} targetWord={targetWord} />
       </main>
       <form onSubmit={handleUserSubmitWord}>
         <input
           type="text"
-          placeholder="Enter a 5 characters long word"
+          placeholder={
+            wrongLengthOfWord
+              ? "Invalid length. Please enter a 5 character long word."
+              : "Enter a 5 character long word."
+          }
           onChange={handleUserEnterWord}
           value={newWordEntered}
         />
