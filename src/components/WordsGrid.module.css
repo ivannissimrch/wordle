@@ -29,3 +29,11 @@
   color: black;
   border: 1px solid black;
 }
+
+.missplaced {
+  background-color: yellow;
+}
+
+.matched {
+  background-color: green;
+}

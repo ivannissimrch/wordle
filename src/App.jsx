@@ -19,7 +19,6 @@ function App() {
   const [newWordEntered, setNewWordEntered] = useState("");
   const [numberOfGuesses, setNumberOfGuesses] = useState(0);
   const MAX_GUESSES = 6;
-  console.log(targetWord);
   const [wrongLengthOfWord, setWrongLengthOfWord] = useState(false);
 
   function handleUserEnterWord(event) {
@@ -31,7 +30,6 @@ function App() {
   function handleUserSubmitWord(event) {
     event.preventDefault();
     setNumberOfGuesses(numberOfGuesses + 1);
-    //Validate word length
 
     if (numberOfGuesses >= MAX_GUESSES) {
       alert("You have reached the maximum number of guesses");
@@ -43,6 +41,8 @@ function App() {
       setWrongLengthOfWord(false);
       return;
     }
+
+    //Validate word length
     if (newWordEntered.length !== 5) {
       setWrongLengthOfWord(true);
       setNewWordEntered("");
@@ -62,10 +62,8 @@ function App() {
     });
 
     setWordsOnGrid(updateWordsOnGrid);
-
     setNewWordEntered("");
   }
-  console.log(wordsOnGrid);
 
   return (
     <>
