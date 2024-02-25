@@ -14,34 +14,35 @@ function App() {
   ];
   const [wordsOnGrid, setWordsOnGrid] = useState(WordsOnGridDefault);
   const [targetWord, setTargetWord] = useState(
-    generate({ minLength: 5, maxLength: 5 })
+    generate({ minLength: 5, maxLength: 5 }).toUpperCase()
   );
   const [newWordEntered, setNewWordEntered] = useState("");
   const [numberOfGuesses, setNumberOfGuesses] = useState(0);
   const MAX_GUESSES = 6;
   const [wrongLengthOfWord, setWrongLengthOfWord] = useState(false);
+  console.log(targetWord);
+  const [win, setWin] = useState(false);
+  const [lose, setLose] = useState(false);
+
+  function restartGame() {
+    setNumberOfGuesses(0);
+    setWordsOnGrid(WordsOnGridDefault);
+    setTargetWord(generate({ minLength: 5, maxLength: 5 }).toUpperCase());
+    setNewWordEntered("");
+    setWrongLengthOfWord(false);
+    setWin(false);
+    setLose(false);
+  }
 
   function handleUserEnterWord(event) {
     setWrongLengthOfWord(false);
     const newWord = event.target.value;
-    setNewWordEntered(newWord);
+    setNewWordEntered(newWord.toUpperCase());
   }
 
   function handleUserSubmitWord(event) {
     event.preventDefault();
     setNumberOfGuesses(numberOfGuesses + 1);
-
-    if (numberOfGuesses >= MAX_GUESSES) {
-      alert("You have reached the maximum number of guesses");
-      //Reset game
-      setNumberOfGuesses(0);
-      setWordsOnGrid(WordsOnGridDefault);
-      setTargetWord(generate({ minLength: 5, maxLength: 5 }));
-      setNewWordEntered("");
-      setWrongLengthOfWord(false);
-      return;
-    }
-
     //Validate word length
     if (newWordEntered.length !== 5) {
       setWrongLengthOfWord(true);
@@ -51,7 +52,6 @@ function App() {
     }
 
     const updateWordsOnGrid = wordsOnGrid.map((word) => {
-      console.log(newWordEntered);
       if (word.id === numberOfGuesses) {
         return {
           id: numberOfGuesses,
@@ -63,26 +63,52 @@ function App() {
 
     setWordsOnGrid(updateWordsOnGrid);
     setNewWordEntered("");
+
+    if (numberOfGuesses >= MAX_GUESSES - 1 && newWordEntered !== targetWord) {
+      setLose(true);
+    }
+
+    if (newWordEntered === targetWord) {
+      setWin(true);
+    }
   }
 
   return (
     <>
       <h1>WORDLE</h1>
+      <p>Guess the word in 6 attempts</p>
       <main>
         <WordsGrid wordsOnGrid={wordsOnGrid} targetWord={targetWord} />
       </main>
-      <form onSubmit={handleUserSubmitWord}>
-        <input
-          type="text"
-          placeholder={
-            wrongLengthOfWord
-              ? "Invalid length. Please enter a 5 character long word."
-              : "Enter a 5 character long word."
-          }
-          onChange={handleUserEnterWord}
-          value={newWordEntered}
-        />
-      </form>
+      {!lose && !win && (
+        <form onSubmit={handleUserSubmitWord}>
+          <input
+            type="text"
+            placeholder={
+              wrongLengthOfWord
+                ? "Invalid length. Please enter a 5 character long word."
+                : "Enter a 5 character long word."
+            }
+            onChange={handleUserEnterWord}
+            value={newWordEntered}
+          />
+        </form>
+      )}
+      {lose && (
+        <div className="message-container">
+          <h1>Sorry you lost. The word was {targetWord}</h1>
+          <button onClick={restartGame}>Restart Game</button>
+        </div>
+      )}
+      {win && (
+        <div className="message-container">
+          <h1>
+            Congratulations! You have guessed the word! in {numberOfGuesses}{" "}
+            ateempts.
+          </h1>
+          <button onClick={restartGame}>Restart Game</button>
+        </div>
+      )}
     </>
   );
 }

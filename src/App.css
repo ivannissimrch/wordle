@@ -2,7 +2,7 @@
   max-width: 1280px;
   height: 100vh;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 10px;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -11,10 +11,30 @@
 }
 
 input {
-  padding: 0.5rem;
-  margin: 1rem;
+  padding: 10px;
+  margin: 10px;
   width: 600px;
   font-size: 1.5rem;
   border: 1px solid black;
   border-radius: 5px;
+}
+
+button {
+  padding: 10px;
+  margin: 10px;
+  font-size: 1.5rem;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: rgb(50, 46, 46);
+  cursor: pointer;
+  color: white;
+}
+
+.message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 10px;
+  width: 600px;
 }
