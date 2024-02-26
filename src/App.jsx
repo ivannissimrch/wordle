@@ -4,7 +4,7 @@ import { generate } from "random-words";
 import WordsGrid from "./components/WordsGrid";
 
 function App() {
-  const WordsOnGridDefault = [
+  const defaultWordsOnGrid = [
     { id: 0, wordInRow: ["", "", "", "", ""] },
     { id: 1, wordInRow: ["", "", "", "", ""] },
     { id: 2, wordInRow: ["", "", "", "", ""] },
@@ -12,7 +12,7 @@ function App() {
     { id: 4, wordInRow: ["", "", "", "", ""] },
     { id: 5, wordInRow: ["", "", "", "", ""] },
   ];
-  const [wordsOnGrid, setWordsOnGrid] = useState(WordsOnGridDefault);
+  const [wordsOnGrid, setWordsOnGrid] = useState(defaultWordsOnGrid);
   const [targetWord, setTargetWord] = useState(
     generate({ minLength: 5, maxLength: 5 }).toUpperCase()
   );
@@ -26,7 +26,7 @@ function App() {
 
   function restartGame() {
     setNumberOfGuesses(0);
-    setWordsOnGrid(WordsOnGridDefault);
+    setWordsOnGrid(defaultWordsOnGrid);
     setTargetWord(generate({ minLength: 5, maxLength: 5 }).toUpperCase());
     setNewWordEntered("");
     setWrongLengthOfWord(false);

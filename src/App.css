@@ -1,19 +1,18 @@
 #root {
-  max-width: 1280px;
   height: 100vh;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 10px;
-  text-align: center;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
+  justify-content: start;
+  align-items: center;
 }
 
 input {
   padding: 10px;
   margin: 10px;
-  width: 600px;
+  width: 350px;
   font-size: 1.5rem;
   border: 1px solid black;
   border-radius: 5px;
@@ -36,5 +35,15 @@ button {
   align-items: center;
   flex-direction: column;
   margin: 10px;
-  width: 600px;
+  width: 350px;
+}
+
+@media (min-width: 650px) {
+  .message-container {
+    width: 600px;
+  }
+
+  input {
+    width: 600px;
+  }
 }
