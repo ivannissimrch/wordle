@@ -31,11 +31,15 @@
 }
 
 .missplaced {
-  background-color: yellow;
+  background-color: rgba(247, 247, 23, 0.997);
 }
 
 .matched {
-  background-color: green;
+  background-color: #93e931;
+}
+
+.wrong {
+  background-color: #f49eab;
 }
 
 @media (min-width: 650px) {

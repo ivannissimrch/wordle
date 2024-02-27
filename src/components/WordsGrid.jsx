@@ -14,6 +14,8 @@ export default function WordsGrid({ wordsOnGrid, targetWord }) {
                 cellStyle = `${classes.cell} ${classes.matched}`;
               } else if (targetWordArray.includes(word.wordInRow[index])) {
                 cellStyle = `${classes.cell} ${classes.missplaced}`;
+              } else if (letter !== "") {
+                cellStyle = `${classes.cell} ${classes.wrong}`;
               }
 
               return (
