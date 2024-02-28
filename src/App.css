@@ -10,8 +10,8 @@
 }
 
 input {
-  padding: 10px;
-  margin: 10px;
+  padding: 10px 1px;
+  margin: 10px 1px;
   width: 350px;
   font-size: 1.5rem;
   border: 1px solid black;
