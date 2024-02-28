@@ -104,7 +104,7 @@ function App() {
         <div className="message-container">
           <h1>
             Congratulations! You have guessed the word! in {numberOfGuesses}{" "}
-            ateempts.
+            attempts.
           </h1>
           <button onClick={restartGame}>Restart Game</button>
         </div>
