@@ -1,0 +1,33 @@
+.layout {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-gap: 1px;
+  padding: 1px;
+  height: 200px;
+  background-color: rgb(250, 247, 247);
+}
+
+.letter {
+  width: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid 1px black;
+  margin: 2px;
+  border-radius: 6px;
+}
+
+.empty {
+  display: hidden;
+}
+
+@media (min-width: 650px) {
+  .layout {
+    width: 600px;
+  }
+
+  .letter {
+    width: 53px;
+  }
+}

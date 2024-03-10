@@ -1,23 +1,22 @@
 import classes from "./WordsGrid.module.css";
 /* eslint-disable react/prop-types */
-export default function WordsGrid({ wordsOnGrid, targetWord }) {
-  const targetWordArray = targetWord.split("");
-
+export default function WordsGrid({ wordsOnGrid, targetWordArray }) {
   return (
     <main className={classes.container}>
-      {wordsOnGrid.map((word) => {
+      {wordsOnGrid.map((word, index) => {
+        let cellStyle = classes.cell;
         return (
-          <div key={word.id} className={classes.row}>
+          <div key={index} className={classes.row}>
             {word.wordInRow.map((letter, index) => {
-              let cellStyle = classes.cell;
-              if (letter === targetWordArray[index]) {
-                cellStyle = `${classes.cell} ${classes.matched}`;
-              } else if (targetWordArray.includes(word.wordInRow[index])) {
-                cellStyle = `${classes.cell} ${classes.missplaced}`;
-              } else if (letter !== "") {
-                cellStyle = `${classes.cell} ${classes.wrong}`;
+              if (word.applyNewStyle === true) {
+                if (letter === targetWordArray[index]) {
+                  cellStyle = `${classes.cell} ${classes.matched}`;
+                } else if (targetWordArray.includes(letter)) {
+                  cellStyle = `${classes.cell} ${classes.missplaced}`;
+                } else if (letter !== "") {
+                  cellStyle = `${classes.cell} ${classes.wrong}`;
+                }
               }
-
               return (
                 <div key={index} className={cellStyle}>
                   {letter}
