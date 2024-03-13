@@ -6,6 +6,49 @@ import KeyBoard from "./components/KeyBoard";
 import toast, { Toaster } from "react-hot-toast";
 
 function App() {
+  const [keyboardKeys, setKeyboardKeys] = useState([
+    //change letter for degfult style
+    { char: "Q", style: "default" },
+    { char: "W", style: "default" },
+    { char: "E", style: "default" },
+    { char: "R", style: "default" },
+    { char: "T", style: "default" },
+    { char: "Y", style: "default" },
+    { char: "U", style: "default" },
+    { char: "I", style: "default" },
+    { char: "O", style: "default" },
+    { char: "P", style: "default" },
+    { char: "A", style: "default" },
+    { char: "S", style: "default" },
+    { char: "D", style: "default" },
+    { char: "F", style: "default" },
+    { char: "G", style: "default" },
+    { char: "H", style: "default" },
+    { char: "J", style: "default" },
+    { char: "K", style: "default" },
+    { char: "L", style: "default" },
+    { char: "enter", style: "default" },
+    { char: "white", style: "default" },
+    { char: "Z", style: "default" },
+    { char: "X", style: "default" },
+    { char: "C", style: "default" },
+    { char: "V", style: "default" },
+    { char: "B", style: "default" },
+    { char: "N", style: "default" },
+    { char: "M", style: "default" },
+    { char: "bksp", style: "default" },
+    { char: "white", style: "default" },
+  ]);
+
+  function updateKeyboardKeysStyles(letter, newStyle) {
+    const upadateStyles = keyboardKeys.map((letter) => {
+      if (letter.char === letter) {
+        return { ...letter, style: newStyle };
+      }
+      return letter;
+    });
+    setKeyboardKeys(upadateStyles);
+  }
   const defaultWordInRowValue = ["", "", "", "", ""];
   const defaultGridState = [...Array(6)].map(() => ({
     wordInRow: defaultWordInRowValue,
@@ -137,15 +180,10 @@ function App() {
         <WordsGrid
           wordsOnGrid={wordsOnGrid}
           targetWordArray={targetWordArray}
+          updateKeyboardKeysStyles={updateKeyboardKeysStyles}
         />
       </main>
-      {!lose && !win && (
-        <KeyBoard
-          onClick={handleUserEnterWord}
-          wordsOnGrid={wordsOnGrid}
-          targetWordArray={targetWordArray}
-        />
-      )}
+      {!lose && !win && <KeyBoard onClick={handleUserEnterWord} />}
       {lose && (
         <div className="message-container">
           <h1>Sorry you lost. The word was {targetWord}</h1>
