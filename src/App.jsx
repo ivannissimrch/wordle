@@ -39,16 +39,17 @@ function App() {
     { char: "", style: "default" },
   ]);
 
-  function updateKeyboardKeysStyles(letterToUpdate, newStyle) {
+  function updateKeyboardKeysStyles(keyToUpdate, newStyle) {
     setKeyboardKeys((prevKeyStyles) =>
       prevKeyStyles.map((key) => {
-        if (key.char === letterToUpdate) {
+        if (key.char === keyToUpdate) {
           return { ...key, style: newStyle };
         }
         return key;
       })
     );
   }
+
   const defaultWordInRowValue = ["", "", "", "", ""];
   const defaultGridState = [...Array(6)].map(() => ({
     wordInRow: defaultWordInRowValue,
@@ -164,9 +165,9 @@ function App() {
     setWordsOnGrid(updateCurrentRowStyle);
 
     //Update keyboard keys Style
-    const wordStyles = wordsOnGrid.map((word) => {
+    wordsOnGrid.forEach((word) => {
       let keyValidationColor = `default`;
-      word.wordInRow.map((letter, index) => {
+      word.wordInRow.forEach((letter, index) => {
         if (letter === targetWordArray[index]) {
           keyValidationColor = `matched`;
           updateKeyboardKeysStyles(letter, keyValidationColor);
@@ -179,8 +180,6 @@ function App() {
         }
       });
     });
-
-    console.log(wordStyles);
 
     //Win/Lose Message
     if (
