@@ -2,97 +2,149 @@ import { useState } from "react";
 import "./App.css";
 import { generate } from "random-words";
 import WordsGrid from "./components/WordsGrid";
+import KeyBoard from "./components/KeyBoard";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
-  const defaultWordsOnGrid = [
-    { id: 0, wordInRow: ["", "", "", "", ""] },
-    { id: 1, wordInRow: ["", "", "", "", ""] },
-    { id: 2, wordInRow: ["", "", "", "", ""] },
-    { id: 3, wordInRow: ["", "", "", "", ""] },
-    { id: 4, wordInRow: ["", "", "", "", ""] },
-    { id: 5, wordInRow: ["", "", "", "", ""] },
-  ];
-  const [wordsOnGrid, setWordsOnGrid] = useState(defaultWordsOnGrid);
+  const defaultWordInRowValue = ["", "", "", "", ""];
+  const defaultGridState = [...Array(6)].map(() => ({
+    wordInRow: defaultWordInRowValue,
+  }));
+  const [wordsOnGrid, setWordsOnGrid] = useState(defaultGridState);
+  const WORD_MAX_LENGTH = 5;
+  const WORD_MIN_LENGTH = 5;
   const [targetWord, setTargetWord] = useState(
     generate({ minLength: 5, maxLength: 5 }).toUpperCase()
   );
-  const [newWordEntered, setNewWordEntered] = useState("");
-  const [numberOfGuesses, setNumberOfGuesses] = useState(0);
-  const MAX_GUESSES = 6;
-  const [wrongLengthOfWord, setWrongLengthOfWord] = useState(false);
   console.log(targetWord);
+  const targetWordArray = targetWord.split("");
+  const [currentWordEntered, setCurrentWordEntered] = useState("");
+  const [numberOfGuesses, setNumberOfGuesses] = useState(0);
+  const MAX_ATTEMPTS = 6;
   const [win, setWin] = useState(false);
   const [lose, setLose] = useState(false);
 
   function restartGame() {
     setNumberOfGuesses(0);
-    setWordsOnGrid(defaultWordsOnGrid);
-    setTargetWord(generate({ minLength: 5, maxLength: 5 }).toUpperCase());
-    setNewWordEntered("");
-    setWrongLengthOfWord(false);
+    setWordsOnGrid(defaultGridState);
+    setTargetWord(
+      generate({
+        minLength: WORD_MIN_LENGTH,
+        maxLength: WORD_MAX_LENGTH,
+      }).toUpperCase()
+    );
+    setCurrentWordEntered("");
     setWin(false);
     setLose(false);
   }
 
   function handleUserEnterWord(event) {
-    setWrongLengthOfWord(false);
-    const newWord = event.target.value;
-    setNewWordEntered(newWord.toUpperCase());
+    const clickedKey = event.target.firstChild.data;
+    if (clickedKey === "enter") {
+      handleUserSubmitWord();
+    } else if (clickedKey === "bksp") {
+      const newWordArray = defaultWordInRowValue.map((letter, index) => {
+        if (index === currentWordEntered.length - 1) {
+          return "";
+        }
+        return currentWordEntered[index];
+      });
+
+      setCurrentWordEntered(newWordArray.join(""));
+      const updateWordsOnGrid = wordsOnGrid.map((word, index) => {
+        if (index === numberOfGuesses) {
+          return {
+            wordInRow: newWordArray,
+          };
+        }
+        return word;
+      });
+      setWordsOnGrid(updateWordsOnGrid);
+    } else {
+      const newWord = currentWordEntered + clickedKey;
+
+      if (newWord.length > WORD_MAX_LENGTH) return;
+      else {
+        const newWordArray = defaultWordInRowValue.map((letter, index) => {
+          if (newWord[index]) {
+            return newWord[index];
+          }
+          return letter;
+        });
+        setCurrentWordEntered(newWord);
+
+        const updateWordsOnGrid = wordsOnGrid.map((word, index) => {
+          if (index === numberOfGuesses) {
+            return {
+              wordInRow: newWordArray,
+            };
+          }
+          return word;
+        });
+
+        setWordsOnGrid(updateWordsOnGrid);
+      }
+    }
   }
 
-  function handleUserSubmitWord(event) {
-    event.preventDefault();
+  function handleUserSubmitWord() {
     setNumberOfGuesses(numberOfGuesses + 1);
+    setCurrentWordEntered("");
     //Validate word length
-    if (newWordEntered.length !== 5) {
-      setWrongLengthOfWord(true);
-      setNewWordEntered("");
+    if (currentWordEntered.length !== WORD_MAX_LENGTH) {
+      toast("Please enter a 5 letter long word");
+      const resetCurrentRow = wordsOnGrid.map((word, index) => {
+        if (index === numberOfGuesses) {
+          return { wordInRow: defaultWordInRowValue };
+        }
+        return word;
+      });
+      setWordsOnGrid(resetCurrentRow);
       setNumberOfGuesses(numberOfGuesses);
       return;
     }
-
-    const updateWordsOnGrid = wordsOnGrid.map((word) => {
-      if (word.id === numberOfGuesses) {
+    //Add atribute to aply validation style to cell
+    const updateCurrentRowStyle = wordsOnGrid.map((word, index) => {
+      if (index === numberOfGuesses) {
         return {
-          id: numberOfGuesses,
-          wordInRow: newWordEntered.split(""),
+          ...word,
+          applyNewStyle: true,
         };
       }
       return word;
     });
+    setWordsOnGrid(updateCurrentRowStyle);
 
-    setWordsOnGrid(updateWordsOnGrid);
-    setNewWordEntered("");
-
-    if (numberOfGuesses >= MAX_GUESSES - 1 && newWordEntered !== targetWord) {
+    //Win/Lose Message
+    if (
+      numberOfGuesses >= MAX_ATTEMPTS - 1 &&
+      currentWordEntered !== targetWord
+    ) {
       setLose(true);
     }
 
-    if (newWordEntered === targetWord) {
+    if (currentWordEntered === targetWord) {
       setWin(true);
     }
   }
 
   return (
     <>
+      <Toaster />
       <h1>WORDLE</h1>
       <p>Guess the word in 6 attempts</p>
       <main>
-        <WordsGrid wordsOnGrid={wordsOnGrid} targetWord={targetWord} />
+        <WordsGrid
+          wordsOnGrid={wordsOnGrid}
+          targetWordArray={targetWordArray}
+        />
       </main>
       {!lose && !win && (
-        <form onSubmit={handleUserSubmitWord}>
-          <input
-            type="text"
-            placeholder={
-              wrongLengthOfWord
-                ? "Invalid length. Please enter a 5 character long word."
-                : "Enter a 5 character long word."
-            }
-            onChange={handleUserEnterWord}
-            value={newWordEntered}
-          />
-        </form>
+        <KeyBoard
+          onClick={handleUserEnterWord}
+          wordsOnGrid={wordsOnGrid}
+          targetWordArray={targetWordArray}
+        />
       )}
       {lose && (
         <div className="message-container">
