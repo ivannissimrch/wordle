@@ -6,6 +6,50 @@ import KeyBoard from "./components/KeyBoard";
 import toast, { Toaster } from "react-hot-toast";
 
 function App() {
+  const [keyboardKeys, setKeyboardKeys] = useState([
+    { char: "Q", style: "default" },
+    { char: "W", style: "default" },
+    { char: "E", style: "default" },
+    { char: "R", style: "default" },
+    { char: "T", style: "default" },
+    { char: "Y", style: "default" },
+    { char: "U", style: "default" },
+    { char: "I", style: "default" },
+    { char: "O", style: "default" },
+    { char: "P", style: "default" },
+    { char: "A", style: "default" },
+    { char: "S", style: "default" },
+    { char: "D", style: "default" },
+    { char: "F", style: "default" },
+    { char: "G", style: "default" },
+    { char: "H", style: "default" },
+    { char: "J", style: "default" },
+    { char: "K", style: "default" },
+    { char: "L", style: "default" },
+    { char: "enter", style: "default" },
+    { char: "", style: "default" },
+    { char: "Z", style: "default" },
+    { char: "X", style: "default" },
+    { char: "C", style: "default" },
+    { char: "V", style: "default" },
+    { char: "B", style: "default" },
+    { char: "N", style: "default" },
+    { char: "M", style: "default" },
+    { char: "bksp", style: "default" },
+    { char: "", style: "default" },
+  ]);
+
+  function updateKeyboardKeysStyles(keyToUpdate, newStyle) {
+    setKeyboardKeys((prevKeyStyles) =>
+      prevKeyStyles.map((key) => {
+        if (key.char === keyToUpdate) {
+          return { ...key, style: newStyle };
+        }
+        return key;
+      })
+    );
+  }
+
   const defaultWordInRowValue = ["", "", "", "", ""];
   const defaultGridState = [...Array(6)].map(() => ({
     wordInRow: defaultWordInRowValue,
@@ -36,6 +80,11 @@ function App() {
     setCurrentWordEntered("");
     setWin(false);
     setLose(false);
+    setKeyboardKeys((prevKeyStyles) =>
+      prevKeyStyles.map((key) => {
+        return { ...key, style: "default" };
+      })
+    );
   }
 
   function handleUserEnterWord(event) {
@@ -115,6 +164,23 @@ function App() {
     });
     setWordsOnGrid(updateCurrentRowStyle);
 
+    //Update keyboard keys Style
+    wordsOnGrid.forEach((word) => {
+      let keyValidationColor = `default`;
+      word.wordInRow.forEach((letter, index) => {
+        if (letter === targetWordArray[index]) {
+          keyValidationColor = `matched`;
+          updateKeyboardKeysStyles(letter, keyValidationColor);
+        } else if (targetWordArray.includes(letter)) {
+          keyValidationColor = `missplaced`;
+          updateKeyboardKeysStyles(letter, keyValidationColor);
+        } else if (letter !== "") {
+          keyValidationColor = `wrong`;
+          updateKeyboardKeysStyles(letter, keyValidationColor);
+        }
+      });
+    });
+
     //Win/Lose Message
     if (
       numberOfGuesses >= MAX_ATTEMPTS - 1 &&
@@ -137,14 +203,11 @@ function App() {
         <WordsGrid
           wordsOnGrid={wordsOnGrid}
           targetWordArray={targetWordArray}
+          updateKeyboardKeysStyles={updateKeyboardKeysStyles}
         />
       </main>
       {!lose && !win && (
-        <KeyBoard
-          onClick={handleUserEnterWord}
-          wordsOnGrid={wordsOnGrid}
-          targetWordArray={targetWordArray}
-        />
+        <KeyBoard onClick={handleUserEnterWord} keyboardKeys={keyboardKeys} />
       )}
       {lose && (
         <div className="message-container">

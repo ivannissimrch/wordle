@@ -2,21 +2,25 @@
 
 import classes from "./KeyBoard.module.css";
 
-export default function KeyBoard({ onClick }) {
-  const letters =
-    "Q W E R T Y U I O P A S D F G H J K L enter  Z X C V B N M bksp ";
-
+export default function KeyBoard({ onClick, keyboardKeys }) {
   return (
     <main className={classes.layout}>
-      {letters.split(" ").map((letter, index) => (
-        <div
-          onClick={onClick}
-          key={index}
-          className={letter === "" ? classes.empty : classes.letter}
-        >
-          {letter}
-        </div>
-      ))}
+      {keyboardKeys.map((keyboardKey, index) => {
+        const validationStyle = `${classes.default} ${
+          classes[keyboardKey.style]
+        }`;
+        return (
+          <div
+            onClick={onClick}
+            key={index}
+            className={
+              keyboardKey.char === "" ? classes.empty : validationStyle
+            }
+          >
+            {keyboardKey.char}
+          </div>
+        );
+      })}
     </main>
   );
 }
