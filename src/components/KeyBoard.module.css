@@ -23,14 +23,32 @@
 }
 
 .missplaced {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid 1px black;
+  margin: 2px;
+  border-radius: 6px;
   background-color: rgba(247, 247, 23, 0.997);
 }
 
 .matched {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid 1px black;
+  margin: 2px;
+  border-radius: 6px;
   background-color: #93e931;
 }
 
 .wrong {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid 1px black;
+  margin: 2px;
+  border-radius: 6px;
   background-color: #f49eab;
 }
 

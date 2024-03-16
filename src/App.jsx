@@ -92,14 +92,15 @@ function App() {
     if (clickedKey === "enter") {
       handleUserSubmitWord();
     } else if (clickedKey === "bksp") {
+      //delete last entered letter and set curent word entered to newArray then update words on grid
       const newWordArray = defaultWordInRowValue.map((letter, index) => {
         if (index === currentWordEntered.length - 1) {
           return "";
         }
         return currentWordEntered[index];
       });
-
       setCurrentWordEntered(newWordArray.join(""));
+
       const updateWordsOnGrid = wordsOnGrid.map((word, index) => {
         if (index === numberOfGuesses) {
           return {
@@ -152,7 +153,7 @@ function App() {
       setNumberOfGuesses(numberOfGuesses);
       return;
     }
-    //Add atribute to aply validation style to cell
+    //Add attribute to aply validation style to cell on WordsGrid component
     const updateCurrentRowStyle = wordsOnGrid.map((word, index) => {
       if (index === numberOfGuesses) {
         return {
@@ -166,16 +167,16 @@ function App() {
 
     //Update keyboard keys Style
     wordsOnGrid.forEach((word) => {
-      let keyValidationColor = `default`;
+      let keyValidationColor = "default";
       word.wordInRow.forEach((letter, index) => {
         if (letter === targetWordArray[index]) {
-          keyValidationColor = `matched`;
+          keyValidationColor = "matched";
           updateKeyboardKeysStyles(letter, keyValidationColor);
         } else if (targetWordArray.includes(letter)) {
-          keyValidationColor = `missplaced`;
+          keyValidationColor = "missplaced";
           updateKeyboardKeysStyles(letter, keyValidationColor);
         } else if (letter !== "") {
-          keyValidationColor = `wrong`;
+          keyValidationColor = "wrong";
           updateKeyboardKeysStyles(letter, keyValidationColor);
         }
       });

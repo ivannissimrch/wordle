@@ -6,9 +6,7 @@ export default function KeyBoard({ onClick, keyboardKeys }) {
   return (
     <main className={classes.layout}>
       {keyboardKeys.map((keyboardKey, index) => {
-        const validationStyle = `${classes.default} ${
-          classes[keyboardKey.style]
-        }`;
+        const validationStyle = classes[keyboardKey.style];
         return (
           <div
             onClick={onClick}

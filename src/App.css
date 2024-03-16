@@ -1,21 +1,11 @@
 #root {
   height: 100vh;
   max-width: 1200px;
-  /* margin: 0 auto; */
   padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-input {
-  padding: 10px 1px;
-  margin: 10px 1px;
-  width: 350px;
-  font-size: 1.5rem;
-  border: 1px solid black;
-  border-radius: 5px;
 }
 
 button {
