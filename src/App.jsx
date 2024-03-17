@@ -4,41 +4,13 @@ import { generate } from "random-words";
 import WordsGrid from "./components/WordsGrid";
 import KeyBoard from "./components/KeyBoard";
 import toast, { Toaster } from "react-hot-toast";
+import generateKeyboardKeys from "./components/helpers/generateKeyboardKeys";
+import updateWordsOnGrid from "./components/helpers/updateWordsOnGrid";
+import deleteLastLetter from "./components/helpers/deleteLastLetter";
+import getNewWordArray from "./components/helpers/getNewWordArray";
 
 function App() {
-  const [keyboardKeys, setKeyboardKeys] = useState([
-    { char: "Q", style: "default" },
-    { char: "W", style: "default" },
-    { char: "E", style: "default" },
-    { char: "R", style: "default" },
-    { char: "T", style: "default" },
-    { char: "Y", style: "default" },
-    { char: "U", style: "default" },
-    { char: "I", style: "default" },
-    { char: "O", style: "default" },
-    { char: "P", style: "default" },
-    { char: "A", style: "default" },
-    { char: "S", style: "default" },
-    { char: "D", style: "default" },
-    { char: "F", style: "default" },
-    { char: "G", style: "default" },
-    { char: "H", style: "default" },
-    { char: "J", style: "default" },
-    { char: "K", style: "default" },
-    { char: "L", style: "default" },
-    { char: "enter", style: "default" },
-    { char: "", style: "default" },
-    { char: "Z", style: "default" },
-    { char: "X", style: "default" },
-    { char: "C", style: "default" },
-    { char: "V", style: "default" },
-    { char: "B", style: "default" },
-    { char: "N", style: "default" },
-    { char: "M", style: "default" },
-    { char: "bksp", style: "default" },
-    { char: "", style: "default" },
-  ]);
-
+  const [keyboardKeys, setKeyboardKeys] = useState(generateKeyboardKeys());
   function updateKeyboardKeysStyles(keyToUpdate, newStyle) {
     setKeyboardKeys((prevKeyStyles) =>
       prevKeyStyles.map((key) => {
@@ -50,7 +22,7 @@ function App() {
     );
   }
 
-  const defaultWordInRowValue = ["", "", "", "", ""];
+  const defaultWordInRowValue = Array(5).fill("");
   const defaultGridState = [...Array(6)].map(() => ({
     wordInRow: defaultWordInRowValue,
   }));
@@ -93,46 +65,33 @@ function App() {
       handleUserSubmitWord();
     } else if (clickedKey === "bksp") {
       //delete last entered letter and set curent word entered to newArray then update words on grid
-      const newWordArray = defaultWordInRowValue.map((letter, index) => {
-        if (index === currentWordEntered.length - 1) {
-          return "";
-        }
-        return currentWordEntered[index];
-      });
+      const newWordArray = deleteLastLetter(
+        defaultWordInRowValue,
+        currentWordEntered
+      );
       setCurrentWordEntered(newWordArray.join(""));
 
-      const updateWordsOnGrid = wordsOnGrid.map((word, index) => {
-        if (index === numberOfGuesses) {
-          return {
-            wordInRow: newWordArray,
-          };
-        }
-        return word;
-      });
-      setWordsOnGrid(updateWordsOnGrid);
+      const updatedWordsOnGrid = updateWordsOnGrid(
+        wordsOnGrid,
+        numberOfGuesses,
+        newWordArray
+      );
+      setWordsOnGrid(updatedWordsOnGrid);
     } else {
       const newWord = currentWordEntered + clickedKey;
 
       if (newWord.length > WORD_MAX_LENGTH) return;
       else {
-        const newWordArray = defaultWordInRowValue.map((letter, index) => {
-          if (newWord[index]) {
-            return newWord[index];
-          }
-          return letter;
-        });
+        const newWordArray = getNewWordArray(defaultWordInRowValue, newWord);
         setCurrentWordEntered(newWord);
 
-        const updateWordsOnGrid = wordsOnGrid.map((word, index) => {
-          if (index === numberOfGuesses) {
-            return {
-              wordInRow: newWordArray,
-            };
-          }
-          return word;
-        });
+        const updatedWordsOnGrid = updateWordsOnGrid(
+          wordsOnGrid,
+          numberOfGuesses,
+          newWordArray
+        );
 
-        setWordsOnGrid(updateWordsOnGrid);
+        setWordsOnGrid(updatedWordsOnGrid);
       }
     }
   }

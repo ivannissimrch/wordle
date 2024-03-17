@@ -1,0 +1,36 @@
+export default function generateKeyboardKeys() {
+  const keyboardKeys = [
+    "Q",
+    "W",
+    "E",
+    "R",
+    "T",
+    "Y",
+    "U",
+    "I",
+    "O",
+    "P",
+    "A",
+    "S",
+    "D",
+    "F",
+    "G",
+    "H",
+    "J",
+    "K",
+    "L",
+    "enter",
+    "",
+    "Z",
+    "X",
+    "C",
+    "V",
+    "B",
+    "N",
+    "M",
+    "bksp",
+    "",
+  ];
+
+  return keyboardKeys.map((char) => ({ char, style: "default" }));
+}
