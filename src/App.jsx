@@ -11,16 +11,6 @@ import getNewWordArray from "./components/helpers/getNewWordArray";
 
 function App() {
   const [keyboardKeys, setKeyboardKeys] = useState(generateKeyboardKeys());
-  function updateKeyboardKeysStyles(keyToUpdate, newStyle) {
-    setKeyboardKeys((prevKeyStyles) =>
-      prevKeyStyles.map((key) => {
-        if (key.char === keyToUpdate) {
-          return { ...key, style: newStyle };
-        }
-        return key;
-      })
-    );
-  }
 
   const defaultWordInRowValue = Array(5).fill("");
   const defaultGridState = [...Array(6)].map(() => ({
@@ -96,22 +86,7 @@ function App() {
     }
   }
 
-  function handleUserSubmitWord() {
-    setNumberOfGuesses(numberOfGuesses + 1);
-    setCurrentWordEntered("");
-    //Validate word length
-    if (currentWordEntered.length !== WORD_MAX_LENGTH) {
-      toast("Please enter a 5 letter long word");
-      const resetCurrentRow = wordsOnGrid.map((word, index) => {
-        if (index === numberOfGuesses) {
-          return { wordInRow: defaultWordInRowValue };
-        }
-        return word;
-      });
-      setWordsOnGrid(resetCurrentRow);
-      setNumberOfGuesses(numberOfGuesses);
-      return;
-    }
+  function applyLetterStylesToLastGuess() {
     //Add attribute to aply validation style to cell on WordsGrid component
     const updateCurrentRowStyle = wordsOnGrid.map((word, index) => {
       if (index === numberOfGuesses) {
@@ -123,25 +98,33 @@ function App() {
       return word;
     });
     setWordsOnGrid(updateCurrentRowStyle);
+  }
 
-    //Update keyboard keys Style
+  function updateKeyStyles() {
     wordsOnGrid.forEach((word) => {
-      let keyValidationColor = "default";
       word.wordInRow.forEach((letter, index) => {
+        if (!letter) {
+          return;
+        }
+        let keyValidationColor = "wrong";
         if (letter === targetWordArray[index]) {
           keyValidationColor = "matched";
-          updateKeyboardKeysStyles(letter, keyValidationColor);
         } else if (targetWordArray.includes(letter)) {
           keyValidationColor = "missplaced";
-          updateKeyboardKeysStyles(letter, keyValidationColor);
-        } else if (letter !== "") {
-          keyValidationColor = "wrong";
-          updateKeyboardKeysStyles(letter, keyValidationColor);
         }
+        setKeyboardKeys((prevKeyStyles) =>
+          prevKeyStyles.map((key) => {
+            if (key.char === letter) {
+              return { ...key, style: keyValidationColor };
+            }
+            return key;
+          })
+        );
       });
     });
+  }
 
-    //Win/Lose Message
+  function updateWinLoseMessage() {
     if (
       numberOfGuesses >= MAX_ATTEMPTS - 1 &&
       currentWordEntered !== targetWord
@@ -154,6 +137,28 @@ function App() {
     }
   }
 
+  function handleUserSubmitWord() {
+    setCurrentWordEntered("");
+
+    //Validate word length
+    if (currentWordEntered.length !== WORD_MAX_LENGTH) {
+      toast("Please enter a 5 letter long word");
+      const resetCurrentRow = wordsOnGrid.map((word, index) => {
+        if (index === numberOfGuesses) {
+          return { wordInRow: defaultWordInRowValue };
+        }
+        return word;
+      });
+      setWordsOnGrid(resetCurrentRow);
+      return;
+    }
+
+    applyLetterStylesToLastGuess();
+    updateKeyStyles();
+    updateWinLoseMessage();
+    setNumberOfGuesses(numberOfGuesses + 1);
+  }
+
   return (
     <>
       <Toaster />
@@ -163,7 +168,6 @@ function App() {
         <WordsGrid
           wordsOnGrid={wordsOnGrid}
           targetWordArray={targetWordArray}
-          updateKeyboardKeysStyles={updateKeyboardKeysStyles}
         />
       </main>
       {!lose && !win && (
