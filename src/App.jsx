@@ -11,16 +11,6 @@ import getNewWordArray from "./components/helpers/getNewWordArray";
 
 function App() {
   const [keyboardKeys, setKeyboardKeys] = useState(generateKeyboardKeys());
-  function updateKeyboardKeysStyles(keyToUpdate, newStyle) {
-    setKeyboardKeys((prevKeyStyles) =>
-      prevKeyStyles.map((key) => {
-        if (key.char === keyToUpdate) {
-          return { ...key, style: newStyle };
-        }
-        return key;
-      })
-    );
-  }
 
   const defaultWordInRowValue = Array(5).fill("");
   const defaultGridState = [...Array(6)].map(() => ({
@@ -136,7 +126,14 @@ function App() {
         } else if (targetWordArray.includes(letter)) {
           keyValidationColor = "missplaced";
         }
-        updateKeyboardKeysStyles(letter, keyValidationColor);
+        setKeyboardKeys((prevKeyStyles) =>
+          prevKeyStyles.map((key) => {
+            if (key.char === letter) {
+              return { ...key, style: keyValidationColor };
+            }
+            return key;
+          })
+        );
       });
     });
 
@@ -162,7 +159,6 @@ function App() {
         <WordsGrid
           wordsOnGrid={wordsOnGrid}
           targetWordArray={targetWordArray}
-          updateKeyboardKeysStyles={updateKeyboardKeysStyles}
         />
       </main>
       {!lose && !win && (
