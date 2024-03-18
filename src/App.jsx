@@ -86,22 +86,7 @@ function App() {
     }
   }
 
-  function handleUserSubmitWord() {
-    setCurrentWordEntered("");
-
-    //Validate word length
-    if (currentWordEntered.length !== WORD_MAX_LENGTH) {
-      toast("Please enter a 5 letter long word");
-      const resetCurrentRow = wordsOnGrid.map((word, index) => {
-        if (index === numberOfGuesses) {
-          return { wordInRow: defaultWordInRowValue };
-        }
-        return word;
-      });
-      setWordsOnGrid(resetCurrentRow);
-      return;
-    }
-
+  function applyLetterStylesToLastGuess() {
     //Add attribute to aply validation style to cell on WordsGrid component
     const updateCurrentRowStyle = wordsOnGrid.map((word, index) => {
       if (index === numberOfGuesses) {
@@ -113,8 +98,9 @@ function App() {
       return word;
     });
     setWordsOnGrid(updateCurrentRowStyle);
+  }
 
-    //Update keyboard keys Style
+  function updateKeyStyles() {
     wordsOnGrid.forEach((word) => {
       word.wordInRow.forEach((letter, index) => {
         if (!letter) {
@@ -136,8 +122,9 @@ function App() {
         );
       });
     });
+  }
 
-    //Win/Lose Message
+  function updateWinLoseMessage() {
     if (
       numberOfGuesses >= MAX_ATTEMPTS - 1 &&
       currentWordEntered !== targetWord
@@ -148,7 +135,27 @@ function App() {
     if (currentWordEntered === targetWord) {
       setWin(true);
     }
+  }
 
+  function handleUserSubmitWord() {
+    setCurrentWordEntered("");
+
+    //Validate word length
+    if (currentWordEntered.length !== WORD_MAX_LENGTH) {
+      toast("Please enter a 5 letter long word");
+      const resetCurrentRow = wordsOnGrid.map((word, index) => {
+        if (index === numberOfGuesses) {
+          return { wordInRow: defaultWordInRowValue };
+        }
+        return word;
+      });
+      setWordsOnGrid(resetCurrentRow);
+      return;
+    }
+
+    applyLetterStylesToLastGuess();
+    updateKeyStyles();
+    updateWinLoseMessage();
     setNumberOfGuesses(numberOfGuesses + 1);
   }
 
