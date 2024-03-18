@@ -87,8 +87,8 @@ function App() {
   }
 
   function handleUserSubmitWord() {
-    setNumberOfGuesses(numberOfGuesses + 1);
     setCurrentWordEntered("");
+
     //Validate word length
     if (currentWordEntered.length !== WORD_MAX_LENGTH) {
       toast("Please enter a 5 letter long word");
@@ -99,9 +99,9 @@ function App() {
         return word;
       });
       setWordsOnGrid(resetCurrentRow);
-      setNumberOfGuesses(numberOfGuesses);
       return;
     }
+
     //Add attribute to aply validation style to cell on WordsGrid component
     const updateCurrentRowStyle = wordsOnGrid.map((word, index) => {
       if (index === numberOfGuesses) {
@@ -148,6 +148,8 @@ function App() {
     if (currentWordEntered === targetWord) {
       setWin(true);
     }
+
+    setNumberOfGuesses(numberOfGuesses + 1);
   }
 
   return (
