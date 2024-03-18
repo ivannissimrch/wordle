@@ -126,18 +126,17 @@ function App() {
 
     //Update keyboard keys Style
     wordsOnGrid.forEach((word) => {
-      let keyValidationColor = "default";
       word.wordInRow.forEach((letter, index) => {
+        if (!letter) {
+          return;
+        }
+        let keyValidationColor = "wrong";
         if (letter === targetWordArray[index]) {
           keyValidationColor = "matched";
-          updateKeyboardKeysStyles(letter, keyValidationColor);
         } else if (targetWordArray.includes(letter)) {
           keyValidationColor = "missplaced";
-          updateKeyboardKeysStyles(letter, keyValidationColor);
-        } else if (letter !== "") {
-          keyValidationColor = "wrong";
-          updateKeyboardKeysStyles(letter, keyValidationColor);
         }
+        updateKeyboardKeysStyles(letter, keyValidationColor);
       });
     });
 
