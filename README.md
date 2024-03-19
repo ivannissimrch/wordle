@@ -1,8 +1,24 @@
-# React + Vite
+# Wordle
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This app is a clone of the popular game Wordle.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Clone the project:
+   git clone [https://github.com/ivannissimrch/wordle.git]
+2. Install dependencies:
+   cd wordle
+   npm install
+3. Run game:
+   npm run dev and open your browser on [http://localhost:5173/]
+
+## Components:
+
+1. App.js is the Main component where most of the logic is implemented
+2. WordsGrid.js is a component that displays a grid with all the words that the user enters.
+3. KeyBoard.js is an onscreen keyboard that when clicked in updates the grid with the letter entered.
+
+when the program starts generating a random 5-letter target word
+when the user clicks the enter key handleSubmitword validates the input and updates the grid with different colors to give the user feedback about the letters entered.
+
+keyboard keys are also styled

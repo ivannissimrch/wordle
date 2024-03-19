@@ -22,7 +22,7 @@ function App() {
   const [targetWord, setTargetWord] = useState(
     generate({ minLength: 5, maxLength: 5 }).toUpperCase()
   );
-  console.log(targetWord);
+
   const targetWordArray = targetWord.split("");
   const [currentWordEntered, setCurrentWordEntered] = useState("");
   const [numberOfGuesses, setNumberOfGuesses] = useState(0);
@@ -138,8 +138,6 @@ function App() {
   }
 
   function handleUserSubmitWord() {
-    setCurrentWordEntered("");
-
     //Validate word length
     if (currentWordEntered.length !== WORD_MAX_LENGTH) {
       toast("Please enter a 5 letter long word");
@@ -157,6 +155,7 @@ function App() {
     updateKeyStyles();
     updateWinLoseMessage();
     setNumberOfGuesses(numberOfGuesses + 1);
+    setCurrentWordEntered("");
   }
 
   return (
