@@ -1,6 +1,7 @@
 # Wordle
 
 This app is a clone of the popular game Wordle.
+![app Image](./src/appImage.jpg)
 
 ## Setup
 
